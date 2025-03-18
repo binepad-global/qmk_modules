@@ -16,3 +16,4 @@ Each module is in it's own child folder, and has a README.md file with instructi
 
 | Module | Description |
 | --:|:-- |
+| Common | Common features for use on all Binepad devices |
