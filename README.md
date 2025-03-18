@@ -16,5 +16,3 @@ Each module is in it's own child folder, and has a README.md file with instructi
 
 | Module | Description |
 | --:|:-- |
-| Caffeine | Adds a screen saver blocker / keep alive key |
-| Mac Globe | Adds a simplified version of the macOS Globe key |
