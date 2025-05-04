@@ -14,6 +14,13 @@ git submodule update --init --recursive
 
 Each module is in it's own child folder, and has a README.md file with instructions on how to use it.
 
+
 | Module | Description |
 | --:|:-- |
-| Common | Common features for use on all Binepad devices |
+|||
+
+To update to the latest commit (of all submodules), use:
+
+```sh
+git submodule update --remote --merge
+```
