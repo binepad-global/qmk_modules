@@ -12,15 +12,13 @@ git submodule add https://github.com/binepad-global/qmk_modules.git modules/bine
 git submodule update --init --recursive
 ```
 
-Each module is in it's own child folder, and has a README.md file with instructions on how to use it.
-
-
-| Module | Description |
-| --:|:-- |
-|||
-
 To update to the latest commit (of all submodules), use:
 
 ```sh
 git submodule update --remote --merge
 ```
+
+Each module is in it's own child folder, and has a README.md file with instructions on how to use it.
+
+| Module | Description |
+| --:|:-- |
