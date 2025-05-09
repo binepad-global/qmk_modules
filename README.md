@@ -22,3 +22,4 @@ Each module is in it's own child folder, and has a README.md file with instructi
 
 | Module | Description |
 | --:|:-- |
+| [`bp_encoder_configurable`](./bp_encoder_configurable/README.md) | Override QMK's quadrature encoder driver with one that allows for configurable resolution|
