@@ -44,14 +44,25 @@
 
 // !! ENCODER_RESOLUTION as a global variable !!
 #ifndef OS_DETECTION_ENABLE
-
 static volatile uint8_t encoder_resolution = ENCODER_RESOLUTION;
+#endif
 
+#ifdef ENCODER_DEFAULT_POS
+    #define __ENCODER_DEFAULT_POS (ENCODER_DEFAULT_POS == 0x3)
+#else
+    #define __ENCODER_DEFAULT_POS false
+#endif
+static volatile bool encoder_default_pos = __ENCODER_DEFAULT_POS;
+
+#ifndef OS_DETECTION_ENABLE
 void set_encoder_resolution(uint8_t resolution) {
     encoder_resolution = resolution;
 }
-
 #endif
+
+void set_encoder_default_pos(bool is_0x3) {
+    encoder_default_pos = is_0x3;
+}
 
 __attribute__((weak)) uint8_t get_encoder_resolution(void) {
 #ifdef OS_DETECTION_ENABLE
@@ -75,6 +86,10 @@ __attribute__((weak)) uint8_t get_encoder_resolution(void) {
 #else
     return encoder_resolution;
 #endif // OS_DETECTION_ENABLE
+}
+
+__attribute__((weak)) bool get_encoder_default_pos(void) {
+    return encoder_default_pos;
 }
 
 __attribute__((weak)) void encoder_quadrature_init_pin(uint8_t index, bool pad_b);
@@ -158,26 +173,26 @@ static void encoder_handle_state_change(uint8_t index, uint8_t state) {
     const uint8_t resolution = get_encoder_resolution();
     encoder_pulses[i] += encoder_LUT[state & 0xF];
 
-#ifdef ENCODER_DEFAULT_POS
-    if ((encoder_pulses[i] >= resolution) || (encoder_pulses[i] <= -resolution) || ((state & 0x3) == ENCODER_DEFAULT_POS)) {
-        if (encoder_pulses[i] >= 1) {
+    if (encoder_default_pos) {
+        if ((encoder_pulses[i] >= resolution) || (encoder_pulses[i] <= -resolution) || ((state & 0x3) != 0)) {
+            if (encoder_pulses[i] >= 1) {
+                encoder_queue_event(index, ENCODER_COUNTER_CLOCKWISE);
+            }
+            if (encoder_pulses[i] <= -1) {
+                encoder_queue_event(index, ENCODER_CLOCKWISE);
+            }
+            encoder_pulses[i] %= resolution;
+            encoder_pulses[i] = 0;
+        }
+    } else {
+        if (encoder_pulses[i] >= resolution) {
             encoder_queue_event(index, ENCODER_COUNTER_CLOCKWISE);
         }
-        if (encoder_pulses[i] <= -1) {
+        if (encoder_pulses[i] <= -resolution) { // direction is arbitrary here, but this clockwise
             encoder_queue_event(index, ENCODER_CLOCKWISE);
         }
         encoder_pulses[i] %= resolution;
-        encoder_pulses[i] = 0;
     }
-#else
-    if (encoder_pulses[i] >= resolution) {
-        encoder_queue_event(index, ENCODER_COUNTER_CLOCKWISE);
-    }
-    if (encoder_pulses[i] <= -resolution) { // direction is arbitrary here, but this clockwise
-        encoder_queue_event(index, ENCODER_CLOCKWISE);
-    }
-    encoder_pulses[i] %= resolution;
-#endif
 }
 
 void encoder_quadrature_handle_read(uint8_t index, uint8_t pin_a_state, uint8_t pin_b_state) {

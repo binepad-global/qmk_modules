@@ -22,9 +22,9 @@
 #        define ENCODER_RESOLUTION_IOS ENCODER_RESOLUTION_MACOS
 #    endif
 #else
-
 uint8_t get_encoder_resolution(void);
-
 #endif
+bool get_encoder_default_pos(void);
 
 void set_encoder_resolution(uint8_t resolution);
+void set_encoder_default_pos(bool is_0x3);
