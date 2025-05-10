@@ -45,7 +45,7 @@
 // !! ENCODER_RESOLUTION as a global variable !!
 #ifndef OS_DETECTION_ENABLE
 
-static volatile uint8_t encoder_resolution = 4; // same as ENCODER_RESOLUTION 4, as default
+static volatile uint8_t encoder_resolution = ENCODER_RESOLUTION;
 
 void set_encoder_resolution(uint8_t resolution) {
     encoder_resolution = resolution;
