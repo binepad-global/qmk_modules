@@ -43,7 +43,7 @@ typedef struct {
 
 extern dt_keycodes_t double_tap_keycodes[];
 
-#if difined(DOUBLE_TAP_KEY_COUNT) && (DOUBLE_TAP_KEY_COUNT > 0)
+#if defined(DOUBLE_TAP_KEY_COUNT) && (DOUBLE_TAP_KEY_COUNT > 0)
 
 void keyboard_post_init_bp_double_tap_lite(void);
 void housekeeping_task_bp_double_tap_lite(void);
