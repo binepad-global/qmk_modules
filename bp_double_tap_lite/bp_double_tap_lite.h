@@ -43,6 +43,10 @@ typedef struct {
 
 extern dt_keycodes_t double_tap_keycodes[];
 
-void matrix_init_bp_double_tap_lite(void); // !! Must be manually called from matrix_init_user
-void matrix_scan_bp_double_tap_lite(void); // !! Must be manually called from matrix_scan_user
-bool process_record_bp_double_tap_lite(uint16_t keycode, keyrecord_t *record); // Community Modules will handle this
+#if difined(DOUBLE_TAP_KEY_COUNT) && (DOUBLE_TAP_KEY_COUNT > 0)
+
+void keyboard_post_init_bp_double_tap_lite(void);
+void housekeeping_task_bp_double_tap_lite(void);
+bool process_record_bp_double_tap_lite(uint16_t keycode, keyrecord_t *record);
+
+#endif
