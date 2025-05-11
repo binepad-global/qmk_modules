@@ -22,7 +22,7 @@
 /**
  * !! : Must be called from matrix_init_user
  */
-void matrix_init_double_tap(void) {
+void matrix_init_double_tap_lite(void) {
     // make doubly sure the struct is zeroed. may not be needed?
     for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
         dt_keycodes_t *current = &double_tap_keycodes[i];
@@ -35,7 +35,7 @@ void matrix_init_double_tap(void) {
 /**
  * !! : Must be called from matrix_scan_user
  */
-void matrix_scan_double_tap(void) {
+void matrix_scan_double_tap_lite(void) {
     for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
         dt_keycodes_t *current = &double_tap_keycodes[i];
 
@@ -72,7 +72,7 @@ void matrix_scan_double_tap(void) {
 /**
  * Automatically called from community module
  */
-bool process_record_bp_double_tap(uint16_t keycode, keyrecord_t *record) {
+bool process_record_bp_double_tap_lite(uint16_t keycode, keyrecord_t *record) {
 #    ifdef CONSOLE_ENABLE
     if (record->event.pressed) {
         char buf[8];
