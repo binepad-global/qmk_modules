@@ -39,7 +39,10 @@ void matrix_scan_bp_double_tap_lite(void) {
     for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
         dt_keycodes_t *current = &double_tap_keycodes[i];
 
-        if (current->active && (current->mode != DT_MODE_UNSET) && (timer_elapsed(current->tap_time) > DOUBLE_TAP_TERM)) {
+        if (current->active && (timer_elapsed(current->tap_time) > DOUBLE_TAP_TERM)) {
+            current->active    = false;
+            current->tap_count = 0;
+
             switch (current->mode) {
                 case DT_MODE_KEYCODE: {
                     if (current->tap_count == 1) {
@@ -63,8 +66,6 @@ void matrix_scan_bp_double_tap_lite(void) {
                 default:
                     break;
             }
-            current->active    = false;
-            current->tap_count = 0;
         }
     }
 }
@@ -92,7 +93,7 @@ bool process_record_bp_double_tap_lite(uint16_t keycode, keyrecord_t *record) {
                     current->active    = true;
                     current->tap_count = 1;
                     current->tap_time  = timer_read();
-                } else {
+                } else if (timer_elapsed(current->tap_time) <= DOUBLE_TAP_TERM) {
                     current->tap_count++;
                 }
             }
