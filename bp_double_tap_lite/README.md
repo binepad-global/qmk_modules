@@ -1,4 +1,4 @@
-# `bp_double_tap` QMK Community Module
+# `bp_double_tap_lite` QMK Community Module
 
 ## Description
 
