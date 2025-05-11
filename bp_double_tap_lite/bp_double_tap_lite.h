@@ -19,7 +19,6 @@ typedef bool (*dt_func_t)(keyrecord_t *record);
 typedef struct {
     uint16_t kcc;
     dt_mode_t mode;
-    uint8_t tap_count;
     timer_t tap_time;
     union {
         uint8_t flags;
