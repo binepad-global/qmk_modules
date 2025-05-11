@@ -1,0 +1,107 @@
+// Copyright 2025 Silvino R. (@silvinor)
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "bp_double_tap_lite.h"
+#include "action.h"
+#ifdef CONSOLE_ENABLE
+#    include "print.h"
+#endif
+
+#ifndef DOUBLE_TAP_TERM
+#    ifdef TAPPING_TERM
+#        define DOUBLE_TAP_TERM TAPPING_TERM
+#    else
+#        define DOUBLE_TAP_TERM 200
+#    endif
+#endif
+
+#ifndef DOUBLE_TAP_KEY_COUNT
+#    error "!! Please define DOUBLE_TAP_KEY_COUNT in config.h"
+#elif DOUBLE_TAP_KEY_COUNT > 0
+
+/**
+ * !! : Must be called from matrix_init_user
+ */
+void matrix_init_double_tap(void) {
+    // make doubly sure the struct is zeroed. may not be needed?
+    for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
+        dt_keycodes_t *current = &double_tap_keycodes[i];
+        current->tap_count     = 0;
+        current->tap_time      = 0;
+        current->active        = false;
+    }
+}
+
+/**
+ * !! : Must be called from matrix_scan_user
+ */
+void matrix_scan_double_tap(void) {
+    for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
+        dt_keycodes_t *current = &double_tap_keycodes[i];
+
+        if (current->active && (current->mode != DT_MODE_UNSET) && (timer_elapsed(current->tap_time) > DOUBLE_TAP_TERM)) {
+            switch (current->mode) {
+                case DT_MODE_KEYCODE: {
+                    if (current->tap_count == 1) {
+                        tap_code(current->kc1);
+                    } else if (current->tap_count >= 2) {
+                        tap_code(current->kc2);
+                    }
+                    break;
+                }
+
+                case DT_MODE_FUNCTION: {
+                    keyrecord_t fake_record = {.event = {.pressed = true}};
+                    if (current->tap_count == 1 && current->fn1) {
+                        current->fn1(&fake_record);
+                    } else if (current->tap_count >= 2 && current->fn2) {
+                        current->fn2(&fake_record);
+                    }
+                    break;
+                }
+
+                default:
+                    break;
+            }
+            current->active    = false;
+            current->tap_count = 0;
+        }
+    }
+}
+
+/**
+ * Automatically called from community module
+ */
+bool process_record_bp_double_tap(uint16_t keycode, keyrecord_t *record) {
+#    ifdef CONSOLE_ENABLE
+    if (record->event.pressed) {
+        char buf[8];
+        snprintf(buf, sizeof(buf), "0x%04X ", keycode);
+        SEND_STRING(buf);
+    }
+#    endif
+
+    for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
+        dt_keycodes_t *current = &double_tap_keycodes[i];
+
+        // is this the one we're interested in?
+        if (keycode == current->kcc) {
+            if (record->event.pressed) {
+                // first press?
+                if (!current->active) {
+                    current->active    = true;
+                    current->tap_count = 1;
+                    current->tap_time  = timer_read();
+                } else {
+                    current->tap_count++;
+                }
+            }
+            return false; // No need to process downstream, as it was handled here.
+        }
+    }
+    return true;
+}
+
+#else
+#    warning "DOUBLE_TAP_KEY_COUNT is zero and is thus moot"
+#endif
