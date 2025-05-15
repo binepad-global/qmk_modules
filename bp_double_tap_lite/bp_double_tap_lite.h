@@ -9,7 +9,7 @@
 // clang-format off
 
 typedef enum {
-    DT_MODE_UNSET,   // 0
+    DT_MODE_NOT_SET, // 0
     DT_MODE_KEYCODE, // 1
     DT_MODE_FUNCTION // 2
 } dt_mode_t;

@@ -3,15 +3,15 @@
 
 #include "bp_double_tap_lite.h"
 #include "action.h"
-#ifdef CONSOLE_ENABLE
-#    include "print.h"
-#endif
+// #ifdef CONSOLE_ENABLE
+// #    include "print.h"
+// #endif
 
 #ifndef DOUBLE_TAP_TERM
 #    ifdef TAPPING_TERM
 #        define DOUBLE_TAP_TERM TAPPING_TERM
 #    else
-#        define DOUBLE_TAP_TERM 200
+#        define DOUBLE_TAP_TERM 250
 #    endif
 #endif
 
@@ -61,13 +61,13 @@ void housekeeping_task_bp_double_tap_lite(void) {
  * Automatically called from community module
  */
 bool process_record_bp_double_tap_lite(uint16_t keycode, keyrecord_t *record) {
-#    ifdef CONSOLE_ENABLE
-    if (record->event.pressed) {
-        char buf[8];
-        snprintf(buf, sizeof(buf), "0x%04X ", keycode);
-        SEND_STRING(buf);
-    }
-#    endif
+// #    ifdef CONSOLE_ENABLE
+//     if (record->event.pressed) {
+//         char buf[8];
+//         snprintf(buf, sizeof(buf), "Keycode 0x%04X ", keycode);
+//         SEND_STRING(buf);
+//     }
+// #    endif
 
     for (uint8_t i = 0; i < DOUBLE_TAP_KEY_COUNT; ++i) {
         dt_keycodes_t *current = &double_tap_keycodes[i];
