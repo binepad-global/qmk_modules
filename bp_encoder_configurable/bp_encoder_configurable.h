@@ -4,6 +4,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #if defined(OS_DETECTION_ENABLE) && (defined(ENCODER_RESOLUTION_LINUX) || defined(ENCODER_RESOLUTION_WINDOWS) || defined(ENCODER_RESOLUTION_MACOS) || defined(ENCODER_RESOLUTION_IOS))
 #    ifndef ENCODER_RESOLUTION
